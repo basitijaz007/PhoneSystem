@@ -1,4 +1,3 @@
-// Header.jsx
 import React from "react";
 import {
   FaPhone,
@@ -11,7 +10,11 @@ import {
   FaSearch,
   FaCalendarAlt,
   FaEllipsisV,
+  FaSign,
+  FaSignInAlt,
+  FaSignOutAlt,
 } from "react-icons/fa";
+import { FaSignHanging } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -28,7 +31,6 @@ const Header = () => {
         <FaVideo className="text-gray-500 hover:text-white cursor-pointer" />
       </div>
 
-      {/* Center Section - Controls and Search Bar */}
       <div className="flex items-center space-x-4">
         <FaArrowLeft className="text-gray-500 hover:text-white cursor-pointer" />
         <FaArrowRight className="text-gray-500 hover:text-white cursor-pointer" />
@@ -54,6 +56,9 @@ const Header = () => {
           <span className="absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full"></span>
         </div>
         <FaEllipsisV className="text-gray-500 hover:text-white cursor-pointer" />
+        <Link to="/login">
+          <FaSignInAlt className="text-gray-400 hover:text-white cursor-pointer" />
+        </Link>
       </div>
     </div>
   );

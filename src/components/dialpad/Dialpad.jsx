@@ -13,6 +13,8 @@ const Dialpad = ({ addRecentCall }) => {
   const [currentCall, setCurrentCall] = useState(null);
   const [callDuration, setCallDuration] = useState(0); // Timer state
   const [intervalId, setIntervalId] = useState(null); // Interval for timer
+  const [callAccepted, setCallAccepted] = useState(false);
+  
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -53,15 +55,8 @@ const Dialpad = ({ addRecentCall }) => {
 
         newDevice.on("incoming", (connection) => {
           console.log("Incoming call:", connection);
-          connection.on("accept", () => {
-            setIsCalling(true);
-            startTimer();  // Start the timer when the call is accepted
-          });
-          connection.on("disconnect", endCall); 
-          connection.accept();  
-          setCurrentCall(connection);
+          connection.accept();
         });
-      
 
         setDevice(newDevice);
       } catch (error) {
@@ -82,22 +77,27 @@ const Dialpad = ({ addRecentCall }) => {
     callerId: "+13219780391",
     Location: "PAk",
   };
-  console.log(params);
   const handleCall = async () => {
     if (device) {
       setIsCalling(true);
+      setCallAccepted(false);
       try {
         const call = await device.connect({ params });
-        console.log(call);
+        // console.log(call);
         setCurrentCall(call);
         addRecentCall(dialedNumber);
 
         call.on("accept", () => {
-            startTimer();
+          console.log("Call accepted by other person");
+          setCallAccepted(true);
+          startTimer();
         });
         call.on("disconnect", () => {
+          console.log("Call disconnected");
           clearInterval(intervalId);
+          setIntervalId(null);
           setCallDuration(0);
+          setCallAccepted(false);
           setIsCalling(false);
           setCurrentCall(null);
           setDialedNumber("");
@@ -114,12 +114,13 @@ const Dialpad = ({ addRecentCall }) => {
     if (currentCall) {
       currentCall.disconnect();
       clearInterval(intervalId);
+      setIntervalId(null);
       setCallDuration(0);
       setIsCalling(false);
       setCurrentCall(null);
+      setDialedNumber("");
     }
   };
-  
 
   const dialButtons = [
     { number: "1", letters: "" },
@@ -144,11 +145,15 @@ const Dialpad = ({ addRecentCall }) => {
     setDialedNumber("");
   };
 
-  return isCalling ? (
-    <CallingScreen dialedNumber={dialedNumber} onEndCall={handleEndCall}  callDuration={callDuration} />
+  return isCalling || callAccepted ? (
+    <CallingScreen
+      dialedNumber={dialedNumber}
+      onEndCall={handleEndCall}
+      callDuration={callDuration}
+      callAccepted={callAccepted}
+    />
   ) : (
     <div className="flex flex-col items-center justify-center h-full bg-gray-800 text-white p-6">
-
       {/* Display number input */}
       <div className="w-full flex justify-center mb-6">
         <input

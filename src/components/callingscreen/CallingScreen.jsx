@@ -2,31 +2,34 @@ import React from "react";
 import { FaVolumeUp, FaMicrophoneSlash, FaPhone, FaPlus } from "react-icons/fa";
 
 const formatDuration = (duration) => {
-  const minutes = String(Math.floor(duration / 60)).padStart(2, '0');
-  const seconds = String(duration % 60).padStart(2, '0');
+  const minutes = String(Math.floor(duration / 60)).padStart(2, "0");
+  const seconds = String(duration % 60).padStart(2, "0");
   return `${minutes}:${seconds}`;
 };
 
-const CallingScreen = ({ dialedNumber, onEndCall, callDuration, callStatus = "Connected" }) => {
+const CallingScreen = ({
+  dialedNumber,
+  onEndCall,
+  callDuration,
+  callAccepted 
+}) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-indigo-900 to-indigo-700 text-white p-4 relative">
-      {/* Background Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-black to-transparent opacity-50 blur-lg" />
 
-      {/* Call Status and Timer */}
-      <div className="z-10 mb-4 text-lg font-semibold opacity-90 tracking-wider">
-        📞 {callStatus}
-      </div>
-      <div className="z-10 text-xl font-medium mb-4 opacity-90 tracking-wider">
-        {formatDuration(callDuration)} {/* Display formatted duration */}
-      </div>
+    
 
-      {/* Dialed Number */}
       <div className="z-10 text-4xl font-extrabold mb-8 tracking-wide text-white opacity-90 shadow-lg">
         {dialedNumber}
       </div>
+      {callAccepted ? (
+        <div className="z-10 text-xl font-medium mb-4 opacity-90 tracking-wider">
+          {formatDuration(callDuration)}
+        </div>
+      ) : (
+        <div className="mb-4 text-lg font-semibold">📞 Calling...</div>
+      )}
 
-      {/* Action Buttons */}
       <div className="z-10 grid grid-cols-3 gap-6 mb-12">
         <button
           aria-label="Speaker"
@@ -51,7 +54,6 @@ const CallingScreen = ({ dialedNumber, onEndCall, callDuration, callStatus = "Co
         </button>
       </div>
 
-      {/* End Call Button */}
       <button
         onClick={onEndCall}
         aria-label="End Call"
