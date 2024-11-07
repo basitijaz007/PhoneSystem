@@ -6,14 +6,18 @@ import Sidebar from "./components/sidebar/Sidebar";
 import CallLog from "./components/calllogs/CallLog";
 import Dialpad from "./components/dialpad/Dialpad";
 import Login from "./components/Auth/login";
+import Inbox from "./components/sidebar/Contacts/Inbox";
+import Contacts from "./components/sidebar/Contacts/Contacts";
+import Threads from "./components/sidebar/Contacts/Threads";
+import Channels from "./components/sidebar/Contacts/Channels";
 
 const App = () => {
   const [recentCalls, setRecentCalls] = useState([]);
 
   const addRecentCall = (number) => {
     setRecentCalls((prevCalls) => {
-      if (prevCalls.includes(number)) return prevCalls; 
-      return [number, ...prevCalls].slice(0, 10); 
+      if (prevCalls.includes(number)) return prevCalls;
+      return [number, ...prevCalls].slice(0, 10);
     });
   };
 
@@ -27,11 +31,18 @@ const App = () => {
           <div className="border-r border-gray-700">
             <Sidebar recentCalls={recentCalls} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 ">
             <Routes>
               <Route path="/" element={<CallLog />} />
-              <Route path="/login" element={<Login/>} />
-              <Route path="/dialpad" element={<Dialpad addRecentCall={addRecentCall} />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/inbox" element={<Inbox />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="/channels" element={<Channels />} />
+              <Route path="/Threads" element={<Threads />} />
+              <Route
+                path="/dialpad"
+                element={<Dialpad addRecentCall={addRecentCall} />}
+              />
             </Routes>
           </div>
         </div>

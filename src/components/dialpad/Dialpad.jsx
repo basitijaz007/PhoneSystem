@@ -3,7 +3,6 @@ import { Device } from "@twilio/voice-sdk";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaPhone } from "react-icons/fa";
-import { ImSpinner2 } from "react-icons/im";
 import CallingScreen from "../callingscreen/CallingScreen";
 
 const Dialpad = ({ addRecentCall }) => {

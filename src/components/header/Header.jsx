@@ -22,7 +22,9 @@ const Header = () => {
     <div className="flex items-center justify-between bg-zinc-900 text-gray-300 py-2 px-4 shadow-lg">
       <div className="flex items-center space-x-4">
         <div className="bg-gray-700 p-2 rounded-lg">
-          <span className="font-bold text-lg text-white">Logo</span>
+          <Link to="/">
+            <span className="font-bold text-lg text-white">Phone System</span>
+          </Link>
         </div>
         <Link to="/dialpad">
           <FaPhone className="text-gray-400 hover:text-white cursor-pointer" />
@@ -51,7 +53,7 @@ const Header = () => {
         <FaCalendarAlt className="text-gray-500 hover:text-white cursor-pointer" />
         <div className="relative">
           <div className="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
-         B
+            B
           </div>
           <span className="absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full"></span>
         </div>

@@ -1,26 +1,38 @@
 import React from "react";
 import { FaInbox, FaAddressBook, FaHashtag, FaComments } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ recentCalls }) => {
   return (
     <div className="bg-zinc-900 text-gray-300 w-52 h-full p-4 space-y-6">
       <div className="space-y-4">
-        <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
-          <FaInbox className="text-gray-400" />
-          <span>Inbox</span>
-        </div>
-        <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
-          <FaAddressBook className="text-gray-400" />
-          <span>Contacts</span>
-        </div>
-        <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
-          <FaHashtag className="text-gray-400" />
-          <span>All channels</span>
-        </div>
-        <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
-          <FaComments className="text-gray-400" />
-          <span>Threads</span>
-        </div>
+        <Link to="/inbox">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
+            <FaInbox className="text-gray-400" />
+            <span>Inbox</span>
+          </div>
+        </Link>
+
+        <Link to="/contacts">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
+            <FaAddressBook className="text-gray-400" />
+            <span>Contacts</span>
+          </div>
+        </Link>
+
+        <Link to="/channels">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
+            <FaHashtag className="text-gray-400" />
+            <span>All channels</span>
+          </div>
+        </Link>
+
+        <Link to="/threads">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer">
+            <FaComments className="text-gray-400" />
+            <span>Threads</span>
+          </div>
+        </Link>
       </div>
 
       <div>
@@ -32,7 +44,7 @@ const Sidebar = ({ recentCalls }) => {
               className="flex items-center space-x-2 p-2 hover:bg-gray-800 rounded-lg cursor-pointer"
             >
               <div className="bg-gray-500 rounded-full w-6 h-6 flex items-center justify-center text-white text-xs">
-                {number[0]} 
+                {number[0]}
               </div>
               <span>{number}</span>
             </div>
