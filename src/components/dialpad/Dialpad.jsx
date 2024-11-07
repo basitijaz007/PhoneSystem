@@ -162,7 +162,7 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
       <div className="w-full flex justify-center mb-6">
         <input
           type="text"
-          className="w-3/4 sm:w-1/2 bg-gray-900 text-center text-3xl text-white p-3 rounded-full shadow-lg outline-none placeholder-gray-500"
+          className="[sm:w-1/2 bg-gray-900 text-center text-xl text-white p-2 rounded-full shadow-lg outline-none placeholder-gray-500"
           placeholder="Enter number"
           value={dialedNumber}
           onChange={(e) => setDialedNumber(e.target.value)}
@@ -174,7 +174,7 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
           <button
             key={index}
             onClick={() => handleButtonClick(button.number)}
-            className="flex flex-col items-center justify-center bg-gray-700 p-6 rounded-lg text-2xl font-semibold text-white hover:bg-gray-600 transform transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl active:scale-90"
+            className="flex flex-col items-center justify-center bg-gray-700 p-3 rounded-lg text-1xl font-semibold text-white hover:bg-gray-600 transform transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl active:scale-90"
           >
             {button.number}
             <span className="text-sm font-light text-gray-300 mt-1">
@@ -186,7 +186,7 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
 
       <button
         onClick={handleCall}
-        className="mt-6 flex items-center justify-center bg-green-600 p-4 rounded-full text-2xl text-white shadow-lg hover:bg-green-500 active:scale-90 transform transition-all duration-150 ease-in-out"
+        className="mt-5 flex items-center justify-center bg-green-600 p-2 rounded-full text-xl text-white shadow-lg hover:bg-green-500 active:scale-90 transform transition-all duration-150 ease-in-out"
       >
         <FaPhone className="mr-2" /> Call
       </button>
