@@ -11,8 +11,8 @@ const Dialpad = ({ addRecentCall }) => {
   const [device, setDevice] = useState(null);
   const [isCalling, setIsCalling] = useState(false);
   const [currentCall, setCurrentCall] = useState(null);
-  const [callDuration, setCallDuration] = useState(0); // Timer state
-  const [intervalId, setIntervalId] = useState(null); // Interval for timer
+  const [callDuration, setCallDuration] = useState(0); 
+  const [intervalId, setIntervalId] = useState(null); 
   const [callAccepted, setCallAccepted] = useState(false);
   
 
@@ -154,7 +154,6 @@ const Dialpad = ({ addRecentCall }) => {
     />
   ) : (
     <div className="flex flex-col items-center justify-center h-full bg-gray-800 text-white p-6">
-      {/* Display number input */}
       <div className="w-full flex justify-center mb-6">
         <input
           type="text"
@@ -165,7 +164,6 @@ const Dialpad = ({ addRecentCall }) => {
         />
       </div>
 
-      {/* Dialpad buttons */}
       <div className="grid grid-cols-3 gap-4">
         {dialButtons.map((button, index) => (
           <button
@@ -181,7 +179,6 @@ const Dialpad = ({ addRecentCall }) => {
         ))}
       </div>
 
-      {/* Call button */}
       <button
         onClick={handleCall}
         className="mt-6 flex items-center justify-center bg-green-600 p-4 rounded-full text-2xl text-white shadow-lg hover:bg-green-500 active:scale-90 transform transition-all duration-150 ease-in-out"
@@ -189,7 +186,6 @@ const Dialpad = ({ addRecentCall }) => {
         <FaPhone className="mr-2" /> Call
       </button>
 
-      {/* Clear button */}
       <button
         onClick={clearDialedNumber}
         className="mt-4 text-gray-400 hover:text-gray-300 text-sm"
