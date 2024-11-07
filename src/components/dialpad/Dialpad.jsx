@@ -5,15 +5,14 @@ import React, { useEffect, useState } from "react";
 import { FaPhone } from "react-icons/fa";
 import CallingScreen from "../callingscreen/CallingScreen";
 
-const Dialpad = ({ addRecentCall }) => {
+const Dialpad = ({ addRecentCall, recentCalls }) => {
   const [dialedNumber, setDialedNumber] = useState("");
   const [device, setDevice] = useState(null);
   const [isCalling, setIsCalling] = useState(false);
   const [currentCall, setCurrentCall] = useState(null);
-  const [callDuration, setCallDuration] = useState(0); 
-  const [intervalId, setIntervalId] = useState(null); 
+  const [callDuration, setCallDuration] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
-  
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -77,6 +76,13 @@ const Dialpad = ({ addRecentCall }) => {
     Location: "PAk",
   };
   const handleCall = async () => {
+    if (!dialedNumber && recentCalls.length > 0) {
+      setDialedNumber(recentCalls[0]);
+    }
+    if (!dialedNumber) {
+      console.warn("no number is dailed");
+      return;
+    }
     if (device) {
       setIsCalling(true);
       setCallAccepted(false);

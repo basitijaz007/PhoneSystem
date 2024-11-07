@@ -50,7 +50,9 @@ const Header = () => {
 
       <div className="flex items-center space-x-4">
         <FaCog className="text-gray-500 hover:text-white cursor-pointer" />
-        <FaCalendarAlt className="text-gray-500 hover:text-white cursor-pointer" />
+        <Link to="/calendar">
+          <FaCalendarAlt className="text-gray-500 hover:text-white cursor-pointer" />
+        </Link>
         <div className="relative">
           <div className="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
             B

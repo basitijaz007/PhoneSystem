@@ -34,7 +34,7 @@ const CallLog = () => {
   const handleTabClick = (tab) => setSelectedTab(tab);
 
   return (
-    <div className="bg-zinc-950 text-gray-300 p-4 w-full h-full">
+    <div className="bg-zinc-950 text-gray-300 p-3 w-full h-full">
       <div className="flex space-x-6 border-b border-gray-700 pb-2 mb-4">
         {tabs.map((tab) => (
           <span
