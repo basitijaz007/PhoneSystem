@@ -1,32 +1,46 @@
-// Dialpad.jsx
 import { Device } from "@twilio/voice-sdk";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { FaPhone } from "react-icons/fa";
 import CallingScreen from "../callingscreen/CallingScreen";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setDialedNumber,
+  setDevice,
+  setIsCalling,
+  setCurrentCall,
+  setCallDuration,
+  setCallAccepted,
+  setIntervalId,
+  resetCallState,
+} from "../../features/call/callSlice";
 
 const Dialpad = ({ addRecentCall, recentCalls }) => {
-  const [dialedNumber, setDialedNumber] = useState("");
-  const [device, setDevice] = useState(null);
-  const [isCalling, setIsCalling] = useState(false);
-  const [currentCall, setCurrentCall] = useState(null);
-  const [callDuration, setCallDuration] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
-  const [callAccepted, setCallAccepted] = useState(false);
+  const dispatch = useDispatch();
+  const {
+    dialedNumber,
+    device,
+    isCalling,
+    currentCall,
+    callDuration,
+    intervalId,
+    callAccepted,
+  } = useSelector((state) => state.call);
+  // console.log(useSelector((state) => state.call));
 
   useEffect(() => {
     const fetchToken = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/taskrouter-token"
+          "http://localhost:3000/api/taskrouter-token"
         );
-        console.log(response.data.token);
         return response.data.token;
       } catch (error) {
         console.error("Error fetching token:", error);
         return null;
       }
     };
+
     const initializeDevice = async () => {
       const token = await fetchToken();
       if (!token) {
@@ -56,7 +70,7 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
           connection.accept();
         });
 
-        setDevice(newDevice);
+        dispatch(setDevice(newDevice));
       } catch (error) {
         console.error("Error initializing Twilio Device:", error);
       }
@@ -64,66 +78,63 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
 
     initializeDevice();
     return () => clearInterval(intervalId);
-  }, []);
+  }, [dispatch, intervalId]);
+
   const startTimer = () => {
-    const id = setInterval(() => setCallDuration((prev) => prev + 1), 1000);
-    setIntervalId(id);
+    const id = setInterval(() => {
+      dispatch(setCallDuration(callDuration + 1));
+    }, 1000);
+    dispatch(setIntervalId(id));
   };
+
   const params = {
     To: dialedNumber,
     agent: "basit",
     callerId: "+13219780391",
     Location: "PAk",
   };
+
   const handleCall = async () => {
     if (!dialedNumber && recentCalls.length > 0) {
-      setDialedNumber(recentCalls[0]);
+      dispatch(setDialedNumber(recentCalls[0]));
     }
     if (!dialedNumber) {
-      console.warn("no number is dailed");
+      console.warn("No number is dialed");
       return;
     }
     if (device) {
-      setIsCalling(true);
-      setCallAccepted(false);
+      dispatch(setIsCalling(true));
+      dispatch(setCallAccepted(false));
       try {
         const call = await device.connect({ params });
-        // console.log(call);
-        setCurrentCall(call);
+        dispatch(setCurrentCall(call));
         addRecentCall(dialedNumber);
 
         call.on("accept", () => {
           console.log("Call accepted by other person");
-          setCallAccepted(true);
+          dispatch(setCallAccepted(true));
           startTimer();
         });
+
         call.on("disconnect", () => {
           console.log("Call disconnected");
           clearInterval(intervalId);
-          setIntervalId(null);
-          setCallDuration(0);
-          setCallAccepted(false);
-          setIsCalling(false);
-          setCurrentCall(null);
-          setDialedNumber("");
+          dispatch(resetCallState());
         });
       } catch (error) {
         console.error("Call failed:", error);
-        setIsCalling(false);
+        dispatch(setIsCalling(false));
       }
     } else {
       console.error("Device not initialized");
     }
   };
+
   const handleEndCall = () => {
     if (currentCall) {
       currentCall.disconnect();
       clearInterval(intervalId);
-      setIntervalId(null);
-      setCallDuration(0);
-      setIsCalling(false);
-      setCurrentCall(null);
-      setDialedNumber("");
+      dispatch(resetCallState());
     }
   };
 
@@ -143,11 +154,11 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
   ];
 
   const handleButtonClick = (number) => {
-    setDialedNumber((prev) => prev + number);
+    dispatch(setDialedNumber(dialedNumber + number));
   };
 
   const clearDialedNumber = () => {
-    setDialedNumber("");
+    dispatch(setDialedNumber(""));
   };
 
   return isCalling || callAccepted ? (
@@ -162,10 +173,10 @@ const Dialpad = ({ addRecentCall, recentCalls }) => {
       <div className="w-full flex justify-center mb-6">
         <input
           type="text"
-          className="[sm:w-1/2 bg-gray-900 text-center text-xl text-white p-2 rounded-full shadow-lg outline-none placeholder-gray-500"
+          className="sm:w-1/2 bg-gray-900 text-center text-xl text-white p-2 rounded-full shadow-lg outline-none placeholder-gray-500"
           placeholder="Enter number"
           value={dialedNumber}
-          onChange={(e) => setDialedNumber(e.target.value)}
+          onChange={(e) => dispatch(setDialedNumber(e.target.value))}
         />
       </div>
 

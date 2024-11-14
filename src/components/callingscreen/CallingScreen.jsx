@@ -7,21 +7,26 @@ const formatDuration = (duration) => {
   return `${minutes}:${seconds}`;
 };
 
-const CallingScreen = ({
-  dialedNumber,
-  onEndCall,
-  callDuration,
-  callAccepted 
-}) => {
+const ActionButton = ({ onClick, icon: Icon, label }) => (
+  <button
+    onClick={onClick}
+    aria-label={label}
+    className="flex flex-col items-center p-4 bg-gray-800 rounded-full text-gray-300 hover:text-white hover:bg-gray-700 transition-transform duration-150 ease-in-out transform hover:scale-105 shadow-lg"
+  >
+    <Icon size={24} />
+    <span className="text-xs mt-1">{label}</span>
+  </button>
+);
+
+const CallingScreen = ({ onEndCall, dialedNumber, callAccepted }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-indigo-900 to-indigo-700 text-white p-4 relative">
       <div className="absolute inset-0 bg-gradient-to-br from-black to-transparent opacity-50 blur-lg" />
 
-    
-
       <div className="z-10 text-4xl font-extrabold mb-8 tracking-wide text-white opacity-90 shadow-lg">
-        {dialedNumber}
+        {dialedNumber || "No Number"}
       </div>
+
       {callAccepted ? (
         <div className="z-10 text-xl font-medium mb-4 opacity-90 tracking-wider">
           {formatDuration(callDuration)}
@@ -31,27 +36,9 @@ const CallingScreen = ({
       )}
 
       <div className="z-10 grid grid-cols-3 gap-6 mb-12">
-        <button
-          aria-label="Speaker"
-          className="flex flex-col items-center p-4 bg-gray-800 rounded-full text-gray-300 hover:text-white hover:bg-gray-700 transition-transform duration-150 ease-in-out transform hover:scale-105 shadow-lg"
-        >
-          <FaVolumeUp size={24} />
-          <span className="text-xs mt-1">Speaker</span>
-        </button>
-        <button
-          aria-label="Add Call"
-          className="flex flex-col items-center p-4 bg-gray-800 rounded-full text-gray-300 hover:text-white hover:bg-gray-700 transition-transform duration-150 ease-in-out transform hover:scale-105 shadow-lg"
-        >
-          <FaPlus size={24} />
-          <span className="text-xs mt-1">Add</span>
-        </button>
-        <button
-          aria-label="Mute"
-          className="flex flex-col items-center p-4 bg-gray-800 rounded-full text-gray-300 hover:text-white hover:bg-gray-700 transition-transform duration-150 ease-in-out transform hover:scale-105 shadow-lg"
-        >
-          <FaMicrophoneSlash size={24} />
-          <span className="text-xs mt-1">Mute</span>
-        </button>
+        <ActionButton icon={FaVolumeUp} label="Speaker" />
+        <ActionButton icon={FaPlus} label="Add" />
+        <ActionButton icon={FaMicrophoneSlash} label="Mute" />
       </div>
 
       <button
