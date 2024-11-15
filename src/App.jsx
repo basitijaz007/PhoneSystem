@@ -13,7 +13,13 @@ import Threads from "./components/sidebar/Contacts/Threads";
 import Channels from "./components/sidebar/Contacts/Channels";
 import Calendar from "./components/calendar/Calendar";
 
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement } from './redux/actions/counterActions';
+
 const App = () => {
+  const count = useSelector((state) => state.counter.count);
+  const dispatch = useDispatch();
+
   const [recentCalls, setRecentCalls] = useState(() => {
     try {
       const savedCalls = localStorage.getItem("recentCalls");
@@ -25,6 +31,7 @@ const App = () => {
   });
 
   useEffect(() => {
+    dispatch(increment())
     localStorage.setItem("recentCalls", JSON.stringify(recentCalls));
   }, [recentCalls]);
 
