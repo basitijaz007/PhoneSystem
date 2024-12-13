@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Header from "./components/header/Header";
-import Sidebar from "./components/sidebar/Sidebar";
+import Layout from './components/Layout';
 import CallLog from "./components/calllogs/CallLog";
 import Dialpad from "./components/dialpad/Dialpad";
 import Login from "./components/Auth/login";
@@ -12,14 +11,18 @@ import Contacts from "./components/sidebar/Contacts/Contacts";
 import Threads from "./components/sidebar/Contacts/Threads";
 import Channels from "./components/sidebar/Contacts/Channels";
 import Calendar from "./components/calendar/Calendar";
-
+import { Device } from "@twilio/voice-sdk";
 import { useSelector, useDispatch } from 'react-redux';
 import { increment, decrement } from './redux/actions/counterActions';
+import { getData, postData,getAuthData } from './services/apiService';
+import { initiateWorker,setupDevice } from './services/common';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  const count = useSelector((state) => state.counter.count);
-  const dispatch = useDispatch();
-
+  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(localStorage.getItem('authToken')));
+  const token = useSelector((state) => state.token.token);
+  console.log(token);
+  
   const [recentCalls, setRecentCalls] = useState(() => {
     try {
       const savedCalls = localStorage.getItem("recentCalls");
@@ -31,10 +34,26 @@ const App = () => {
   });
 
   useEffect(() => {
-    dispatch(increment())
+    if(isAuthenticated){
+
+      fetchItems();
+    }
+    // dispatch(increment())
     localStorage.setItem("recentCalls", JSON.stringify(recentCalls));
   }, [recentCalls]);
 
+  const fetchItems = async () => {
+    try {
+      const device = await getAuthData('/phone/getToken'); // Replace '/items' with your API endpoint
+      // console.log(items.data.token);
+      setupDevice(device);
+      const worker = await getAuthData('/phone/getToken1'); // Replace '/items' with your API endpoint
+      // console.log(items.data.token);
+      initiateWorker(worker);
+    } catch (error) {
+      console.error('Failed to fetch items:', error);
+    }
+  };
   const addRecentCall = (number) => {
     setRecentCalls((prevCalls) => {
       if (prevCalls.includes(number)) return prevCalls;
@@ -46,31 +65,23 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        <div className="border-b border-gray-700">
-          <Header />
-        </div>
-        <div className="flex">
-          <div className="border-r border-gray-700">
-            <Sidebar recentCalls={recentCalls} />
-          </div>
-          <div className="flex-1 ">
             <Routes>
-              <Route path="/" element={<CallLog />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/inbox" element={<Inbox />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/channels" element={<Channels />} />
-              <Route path="/Threads" element={<Threads />} />
-              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/" element={ 
+                <ProtectedRoute isAuthenticated={isAuthenticated}> 
+                  <Layout><CallLog /> </Layout>
+                </ProtectedRoute>
+              } />
+              <Route path="/inbox" element={ <Layout><Inbox /></Layout>} />
+              <Route path="/contacts" element={ <Layout><Contacts /></Layout>} />
+              <Route path="/channels" element={ <Layout><Channels /></Layout>} />
+              <Route path="/Threads" element={ <Layout><Threads /></Layout>} />
+              <Route path="/calendar" element={ <Layout><Calendar /></Layout>} />
               <Route
                 path="/dialpad"
                 element={<Dialpad addRecentCall={addRecentCall} recentCalls={recentCalls} />}
               />
             </Routes>
-          </div>
-        </div>
-      </div>
     </Router>
   );
 };

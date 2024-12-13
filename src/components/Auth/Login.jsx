@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { getData, postData } from '../../services/apiService';
+import { useSelector, useDispatch } from 'react-redux';
 
 const SignIn = () => {
   const [authToken, setAuthToken] = useState(localStorage.getItem("authToken"));
-  const apiUrl = "http://127.0.0.1:8000/api";
+  // const apiUrl = "http://127.0.0.1:8000/api";
   const navigate = useNavigate();
-
+  useEffect(() => {
+      if(authToken){
+        navigate('/')
+      }
+    }
+  )
+  // const token = useSelector((state) => state);
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -26,23 +35,28 @@ const SignIn = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(`${apiUrl}/login`, {
+        const response = await postData('/login', {
           email: values.email,
           password: values.password,
         });
+       console.log(response)
 
-        const { token } = response.data;
+        const token = response.data.token;
+        console.log(token)
         setAuthToken(token);  
+       
         localStorage.setItem("authToken", token); 
+        localStorage.setItem("user", JSON.stringify(response.data.user)); 
 
-        if (!toast.isActive(13)) {
+       
           toast.success("Login successful!", {
             position: "top-right",
             autoClose: 3000,
           });
-        }
+        
 
         navigate("/"); 
+        // dispatch(setToken(token));
       } catch (error) {
         if (!toast.isActive(13)) {
           toast.error("Login failed. Please check your credentials.", {
